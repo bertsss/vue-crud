@@ -1,38 +1,55 @@
 <template>
-    <div class="list container text-center m-5" style="max-width: 720px;">
-        <img class="float-right" :src="require('@/assets/close.png')" @click="$router.go(-1)">
+    <div v-if="data" class="list container text-center m-5" style="max-width: 720px;">
+        <img class="float-right" :src="require('@/assets/close.png')" @click="$router.push('/')">
         <h1 class="mb-5 font-weight-bold">VIEW</h1>
 
-        <div class="card mx-auto mb-5 border-0 shadow" @click="$router.push('/view')">
+        <div class="card mx-auto mb-5 border-0 shadow">
             <div class="card-body">
-                <h5 class="card-title font-weight-normal mb-3">Card title</h5>
-                <p class="card-text font-weight-light">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                <p class="card-text text-right"><small class="text-muted">Last updated 3 mins ago</small></p>
+                <h5 class="card-title font-weight-normal mb-3">{{ data.title }}</h5>
+                <p class="card-text font-weight-light">{{ data.content }}</p>
+                <p class="card-text text-right"><small class="text-muted">{{ data.date }}</small></p>
             </div>
         </div>
 
         <div class="text-right">
-            <button class="btn btn-outline-info mr-2" @click="$router.push('/update')">Update</button>
-            <button class="btn btn-outline-danger">Delete</button>
+            <button class="btn btn-outline-info mr-2" @click="$router.push(`/update/${data.id}`)">Update</button>
+            <button class="btn btn-outline-danger" @click="remove">Delete</button>
         </div>
     </div>
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 export default {
+	props: ['id'],
 	name: 'View',
 
+	data () {
+		return {
+			data: null
+		}
+	},
+
+	computed: mapGetters({
+		list: 'getList'
+	}),
+
+	created () {
+		this.data = this.list.find(i => i.id === parseInt(this.id))
+		if (!this.data) this.$router.push('/notfound')
+	},
+
 	methods: {
-		lala () {
-			alert(111)
+		remove () {
+			this.$store.commit('remove', this.id)
+			this.$router.push('/')
 		}
 	}
 }
 </script>
 
 <style lang="scss" scoped>
-.card, img, .date{
+img {
     cursor: pointer;
 }
 </style>

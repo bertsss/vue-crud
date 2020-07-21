@@ -15,14 +15,22 @@ const routes = [
 		component: () => import('../views/Add.vue')
 	},
 	{
-		path: '/view',
+		path: '/view/:id',
 		name: 'View',
+		props: true,
 		component: () => import('../views/View.vue')
 	},
 	{
-		path: '/update',
+		path: '/update/:id',
 		name: 'Update',
+		props: true,
 		component: () => import('../views/Update.vue')
+	},
+
+	{
+		path: '*',
+		name: 'PageNotFound',
+		component: () => import('../views/PageNotFound.vue')
 	}
 
 ]
